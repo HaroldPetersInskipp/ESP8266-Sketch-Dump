@@ -1,0 +1,394 @@
+[
+    {
+        "id": "ff78de1480406fb9",
+        "type": "debug",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "debug All",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "d4951651718b9e42",
+        "type": "mqtt out",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "",
+        "topic": "",
+        "qos": "2",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "text/plain",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1230ad33.ea00bb",
+        "x": 850,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "8385fd255d1f1ea2",
+        "type": "inject",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "ESP8266/anytopic",
+        "payload": "success",
+        "payloadType": "str",
+        "x": 190,
+        "y": 540,
+        "wires": [
+            [
+                "50355ecc1ca9c336",
+                "d4951651718b9e42"
+            ]
+        ]
+    },
+    {
+        "id": "026295cd9410c071",
+        "type": "mqtt in",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "",
+        "topic": "ESP8266/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1230ad33.ea00bb",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 450,
+        "y": 780,
+        "wires": [
+            [
+                "6a4d0bc07478269f"
+            ]
+        ]
+    },
+    {
+        "id": "14ba690b27f22886",
+        "type": "inject",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "newDate",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "ESP8266/newDate",
+        "payload": "{ \"data\": true }",
+        "payloadType": "json",
+        "x": 140,
+        "y": 600,
+        "wires": [
+            [
+                "9a3d063d8bd57b57"
+            ]
+        ]
+    },
+    {
+        "id": "9a3d063d8bd57b57",
+        "type": "function",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "Date() better format",
+        "func": "const x = new Date();\nvar month;\nvar dayOfWeek;\nmsg.payload.year = (x.getFullYear());\n\nif (x.getMonth() == 0) {\n    month = \"January\";\n} else if (x.getMonth() == 1) {\n    month = \"Febuary\";\n} else if (x.getMonth() == 2) {\n    month = \"March\";\n} else if (x.getMonth() == 3) {\n    month = \"April\";\n} else if (x.getMonth() == 4) {\n    month = \"May\";\n} else if (x.getMonth() == 5) {\n    month = \"June\";\n} else if (x.getMonth() == 6) {\n    month = \"July\";\n} else if (x.getMonth() == 7) {\n    month = \"August\";\n} else if (x.getMonth() == 8) {\n    month = \"September\";\n} else if (x.getMonth() == 9) {\n    month = \"October\";\n} else if (x.getMonth() == 10) {\n    month = \"November\";\n} else if (x.getMonth() == 11) {\n    month = \"December\";\n}\nmsg.payload.month = month;\n\nmsg.payload.day = (x.getDate());\n\nif (x.getDay() == 0) {\n    dayOfWeek = \"Sunday\";\n} else if (x.getDay() == 1) {\n    dayOfWeek = \"Monday\";\n} else if (x.getDay() == 2) {\n    dayOfWeek = \"Tuesday\";\n} else if (x.getDay() == 3) {\n    dayOfWeek = \"Wednesday\";\n} else if (x.getDay() == 4) {\n    dayOfWeek = \"Thursday\";\n} else if (x.getDay() == 5) {\n    dayOfWeek = \"Friday\";\n} else if (x.getDay() == 6) {\n    dayOfWeek = \"Saturday\";\n}\nmsg.payload.dayOfWeek = dayOfWeek;\n\nmsg.payload.hour = (x.getHours());\nmsg.payload.minute = (x.getMinutes());\nmsg.payload.second = (x.getSeconds());\nmsg.payload.millisecond = (x.getMilliseconds());\nmsg.payload.timestamp = (x.getTime());\nmsg.payload.fullDate = (x);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 600,
+        "wires": [
+            [
+                "d4951651718b9e42"
+            ]
+        ]
+    },
+    {
+        "id": "6a4d0bc07478269f",
+        "type": "switch",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "ESP8266/newDate",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "ESP8266/",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 590,
+        "y": 780,
+        "wires": [
+            [
+                "b25fd714144ed2b3"
+            ],
+            [
+                "1981b21d2fcc0465",
+                "3457ca5c10258ccf"
+            ]
+        ]
+    },
+    {
+        "id": "b25fd714144ed2b3",
+        "type": "debug",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "debug ESP8266/newDate",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "1981b21d2fcc0465",
+        "type": "debug",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "debug ESP8266/#",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "189acb155d0f748b",
+        "type": "mqtt in",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "All",
+        "topic": "#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1230ad33.ea00bb",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 430,
+        "y": 720,
+        "wires": [
+            [
+                "ff78de1480406fb9"
+            ]
+        ]
+    },
+    {
+        "id": "3457ca5c10258ccf",
+        "type": "switch",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "ESP8266/Controller_1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ESP8266/Controller_2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ESP8266/Controller_3",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ESP8266/Controller_4",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ESP8266/Controller_5",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 5,
+        "x": 690,
+        "y": 920,
+        "wires": [
+            [
+                "530b88813f7fbe16"
+            ],
+            [
+                "4e5ae674e03576a7"
+            ],
+            [
+                "46f757414d63caf9"
+            ],
+            [
+                "7b022d73efaf2722"
+            ],
+            [
+                "9e080324d8df6b80"
+            ]
+        ]
+    },
+    {
+        "id": "530b88813f7fbe16",
+        "type": "debug",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "debug ESP8266/Controller_1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "4e5ae674e03576a7",
+        "type": "debug",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "debug ESP8266/Controller_2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "46f757414d63caf9",
+        "type": "debug",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "debug ESP8266/Controller_3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "7b022d73efaf2722",
+        "type": "debug",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "debug ESP8266/Controller_4",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "9e080324d8df6b80",
+        "type": "debug",
+        "z": "8b5b1a7d7d2d0b88",
+        "name": "debug ESP8266/Controller_5",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "1230ad33.ea00bb",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "10.0.0.111",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "2",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "2",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "2",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
